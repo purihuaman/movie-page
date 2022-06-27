@@ -10,10 +10,17 @@ const App = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
-      <p>movies</p>
-
-      {movies && <MovieCard movies={movies} />}
+    <div className='container container-xl mx-auto flex flex-wrap'>
+      {movies &&
+        movies.map((movie) => (
+          <MovieCard
+            key={movie.id}
+            title={movie.title}
+            poster={movie.poster}
+            year={movie.year}
+            rating={movie.rating}
+          />
+        ))}
 
       <button
         onClick={() => setPage(page + 100)}

@@ -1,4 +1,5 @@
 import { API_HOST } from '../../constants/api';
+import { movieApiMapper } from '../mappers/movie-api-mapper';
 
 const TRENDING_MOVIES_PATH = '/trending/movie/day';
 
@@ -16,7 +17,10 @@ const searchTredingMovies = async (page) => {
 
       return {
         success: true,
-        data: { movies, totalPages },
+        data: {
+          movies: movies.map((movie) => movieApiMapper(movie)),
+          totalPages,
+        },
       };
     }
 

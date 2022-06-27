@@ -1,9 +1,21 @@
-const MovieCard = ({ movies }) => {
-  return movies.map((movie) => (
-    <article key={movie.id}>
-      <h2>{movie.title}</h2>
+import { API_POSTER_HOST } from '../constants/api';
+
+const MovieCard = ({ title, poster, year, rating }) => {
+  return (
+    <article className='w-1/4 p-4'>
+      <div>
+        <img
+          src={`${API_POSTER_HOST}${poster}`}
+          alt={title}
+          className='w-full block'
+        />
+
+        <h3>{title}</h3>
+        <span>{rating}</span>
+        <span>{year}</span>
+      </div>
     </article>
-  ));
+  );
 };
 
 export default MovieCard;
