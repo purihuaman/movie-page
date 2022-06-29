@@ -1,35 +1,30 @@
-import MovieCard from './components/MovieCard';
+import MoviesGrid from './components/MoviesGrid';
 import { useMoviesInfo } from './lib/hooks/use-movies-info';
 
 const App = () => {
-  const { movies, page, error, loading, setPage } = useMoviesInfo();
+	const { movies, searchTerm, page, error, loading, setSearchTerm, setPage } =
+		useMoviesInfo();
 
-  /* NOTE:-> Aquí va un skeleton en lugar del loading guarro esté */
-  if (loading) return <p>Cargando....</p>;
+	return (
+		<>
+			<input
+				type='text'
+				value={searchTerm}
+				onChange={(ev) => setSearchTerm(ev.target.value)}
+				className='text-blue-500'
+				placeholder='Buscar...'
+			/>
 
-  if (error) return <p>{error}</p>;
+			<MoviesGrid movies={movies} loading={loading} error={error} />
 
-  return (
-    <div className='container container-xl mx-auto flex flex-wrap'>
-      {movies &&
-        movies.map((movie) => (
-          <MovieCard
-            key={movie.id}
-            title={movie.title}
-            poster={movie.poster}
-            year={movie.year}
-            rating={movie.rating}
-          />
-        ))}
-
-      <button
-        onClick={() => setPage(page + 100)}
-        className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded'
-      >
-        Página {page}
-      </button>
-    </div>
-  );
+			<button
+				onClick={() => setPage(page + 100)}
+				className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded'
+			>
+				Página {page}
+			</button>
+		</>
+	);
 };
 
 export default App;

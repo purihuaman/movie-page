@@ -1,73 +1,87 @@
 import { useEffect, useReducer } from 'react';
 import {
-  moviesInfoReducer,
-  MOVIES_INFO_ACTIONS,
-  MOVIES_INFO_INITIAL_STATE,
+	moviesInfoReducer,
+	MOVIES_INFO_ACTIONS,
+	MOVIES_INFO_INITIAL_STATE,
 } from '../reducers/movies-info-reducer';
 
-import { searchTredingMovies } from '../api/search-trending-movies';
+import { searchMoviesApi } from '../api/search-movie-api';
 
-const searchTrending = async (
-  page,
-  searchStart,
-  searchSuccess,
-  searchError
+const searchMovies = async (
+	search,
+	page,
+	searchStart,
+	searchSuccess,
+	searchError
 ) => {
-  /* NOTE:-> Mejorado */
+	/* NOTE:-> Mejorado */
 
-  /* FIXME: Start search */
-  searchStart();
+	/* FIXME: Start search */
+	searchStart();
 
-  const { success, data, statusCode } = await searchTredingMovies(page);
+	const { success, data, statusCode } = await searchMoviesApi(search, page);
 
-  if (success) {
-    /* FIXME: Search success */
-    searchSuccess(data.movies);
-  } else {
-    /* FIXME: Search error */
-    searchError(`Error: ${statusCode}`);
-  }
+	if (success) searchSuccess(data.movies); /* FIXME: Search success */
+	else searchError(`Error: ${statusCode}`); /* FIXME: Search error */
 
-  /* NOTE:-> Antes */
-  // setLoading(true);
-  // const { success, data, statusCode } = await searchTredingMovies(page);
-  // if (success) setMovies(data.movies);
-  // else {
-  //   setMovies();
-  //   setError(`Error: ${statusCode}`);
-  // }
-  // setLoading(false);
+	/* NOTE:-> Antes */
+	// setLoading(true);
+	// const { success, data, statusCode } = await searchTredingMoviesApi(page);
+	// if (success) setMovies(data.movies);
+	// else {
+	//   setMovies();
+	//   setError(`Error: ${statusCode}`);
+	// }
+	// setLoading(false);
 };
 
 const useMoviesInfo = () => {
-  const [moviesInfo, setMoviesInfo] = useReducer(
-    moviesInfoReducer,
-    MOVIES_INFO_INITIAL_STATE
-  );
-  // const [moviesInfo, setMoviesInfo] = useReducer(moviesInfoReducer, {
-  //   movies: [],
-  //   page: 1,
-  //   error: undefined,
-  //   loading: false,
-  // });
+	const [moviesInfo, setMoviesInfo] = useReducer(
+		moviesInfoReducer,
+		MOVIES_INFO_INITIAL_STATE
+	);
+	// const [moviesInfo, setMoviesInfo] = useReducer(moviesInfoReducer, {
+	//   movies: [],
+	//   page: 1,
+	//   error: undefined,
+	//   loading: false,
+	// });
 
-  const searchStart = () =>
-    setMoviesInfo({ type: MOVIES_INFO_ACTIONS.SEARCH_START });
+	const searchStart = () =>
+		setMoviesInfo({ type: MOVIES_INFO_ACTIONS.SEARCH_START });
 
-  const searchSuccess = (movies) =>
-    setMoviesInfo({ type: MOVIES_INFO_ACTIONS.SEARCH_SUCCESS, movies });
+	const searchSuccess = (movies) =>
+		setMoviesInfo({ type: MOVIES_INFO_ACTIONS.SEARCH_SUCCESS, movies });
 
-  const searchError = (error) =>
-    setMoviesInfo({ type: MOVIES_INFO_ACTIONS.SEARCH__ERROR, error });
+	const searchError = (error) =>
+		setMoviesInfo({ type: MOVIES_INFO_ACTIONS.SEARCH__ERROR, error });
 
-  const setPage = (newPage) =>
-    setMoviesInfo({ type: MOVIES_INFO_ACTIONS.SET_PAGE, page: newPage });
+	const setSearchTerm = (newSearchTerm) =>
+		setMoviesInfo({
+			type: MOVIES_INFO_ACTIONS.SET_SEARCH_TERM,
+			searchTerm: newSearchTerm,
+		});
 
-  useEffect(() => {
-    searchTrending(moviesInfo.page, searchStart, searchSuccess, searchError);
-  }, [moviesInfo.page]);
+	const setPage = (newPage) =>
+		setMoviesInfo({ type: MOVIES_INFO_ACTIONS.SET_PAGE, page: newPage });
 
-  return { ...moviesInfo, setPage };
+	useEffect(() => {
+		const timeoutID = setTimeout(
+			() =>
+				searchMovies(
+					moviesInfo.searchTerm,
+					moviesInfo.page,
+					searchStart,
+					searchSuccess,
+					searchError
+				),
+			200
+		);
+
+		return () => clearInterval(timeoutID);
+	}, [moviesInfo.searchTerm, moviesInfo.page]);
+
+	return { ...moviesInfo, setSearchTerm, setPage };
 };
 
 // const useMoviesInfo = () => {
