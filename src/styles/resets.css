@@ -1,9 +1,11 @@
 body {
-  @apply bg-bg;
-  @apply text-text;
-  font-family: 'Quicksand', sans-serif;
+	font-family: 'Quicksand', sans-serif;
+
+	background-color: var(--color-bg);
+	color: var(--color-text);
 }
 
-input {
-  outline: none;
+input,
+button {
+	outline: none;
 }

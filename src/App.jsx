@@ -1,29 +1,35 @@
 import MoviesGrid from './components/MoviesGrid';
+import Pagination from './components/Pagination';
 import { useMoviesInfo } from './lib/hooks/use-movies-info';
 
 const App = () => {
-	const { movies, searchTerm, page, error, loading, setSearchTerm, setPage } =
-		useMoviesInfo();
+	const {
+		movies,
+		totalPages,
+		searchTerm,
+		page,
+		error,
+		loading,
+		setSearchTerm,
+		setPage,
+	} = useMoviesInfo();
 
 	return (
-		<>
-			<input
-				type='text'
-				value={searchTerm}
-				onChange={(ev) => setSearchTerm(ev.target.value)}
-				className='text-blue-500'
-				placeholder='Buscar...'
-			/>
+		<div className='container container-xl mx-auto'>
+			<div className='flex justify-between items-center p-4'>
+				<input
+					type='text'
+					onChange={(ev) => setSearchTerm(ev.target.value)}
+					value={searchTerm}
+					className='py-2 px-4 bg-transparent border border-color:gray rounded-md'
+					placeholder='Buscar...'
+				/>
+
+				<Pagination page={page} totalPages={totalPages} setPage={setPage} />
+			</div>
 
 			<MoviesGrid movies={movies} loading={loading} error={error} />
-
-			<button
-				onClick={() => setPage(page + 100)}
-				className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded'
-			>
-				Página {page}
-			</button>
-		</>
+		</div>
 	);
 };
 

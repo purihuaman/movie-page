@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import {
 	moviesInfoReducer,
 	MOVIES_INFO_ACTIONS,
@@ -21,7 +21,8 @@ const searchMovies = async (
 
 	const { success, data, statusCode } = await searchMoviesApi(search, page);
 
-	if (success) searchSuccess(data.movies); /* FIXME: Search success */
+	if (success)
+		searchSuccess(data.movies, data.totalPages); /* FIXME: Search success */
 	else searchError(`Error: ${statusCode}`); /* FIXME: Search error */
 
 	/* NOTE:-> Antes */
@@ -40,6 +41,8 @@ const useMoviesInfo = () => {
 		moviesInfoReducer,
 		MOVIES_INFO_INITIAL_STATE
 	);
+
+	const isInitialzed = useRef(false);
 	// const [moviesInfo, setMoviesInfo] = useReducer(moviesInfoReducer, {
 	//   movies: [],
 	//   page: 1,
@@ -50,8 +53,12 @@ const useMoviesInfo = () => {
 	const searchStart = () =>
 		setMoviesInfo({ type: MOVIES_INFO_ACTIONS.SEARCH_START });
 
-	const searchSuccess = (movies) =>
-		setMoviesInfo({ type: MOVIES_INFO_ACTIONS.SEARCH_SUCCESS, movies });
+	const searchSuccess = (movies, totalPages) =>
+		setMoviesInfo({
+			type: MOVIES_INFO_ACTIONS.SEARCH_SUCCESS,
+			movies,
+			totalPages,
+		});
 
 	const searchError = (error) =>
 		setMoviesInfo({ type: MOVIES_INFO_ACTIONS.SEARCH__ERROR, error });
@@ -66,19 +73,21 @@ const useMoviesInfo = () => {
 		setMoviesInfo({ type: MOVIES_INFO_ACTIONS.SET_PAGE, page: newPage });
 
 	useEffect(() => {
-		const timeoutID = setTimeout(
-			() =>
-				searchMovies(
-					moviesInfo.searchTerm,
-					moviesInfo.page,
-					searchStart,
-					searchSuccess,
-					searchError
-				),
-			200
-		);
+		const searchTimeout = () =>
+			searchMovies(
+				moviesInfo.searchTerm,
+				moviesInfo.page,
+				searchStart,
+				searchSuccess,
+				searchError
+			);
 
-		return () => clearInterval(timeoutID);
+		if (!isInitialzed.current) {
+			searchTimeout();
+		} else {
+			const timeoutID = setTimeout(() => searchTimeout, 200);
+			return () => clearInterval(timeoutID);
+		}
 	}, [moviesInfo.searchTerm, moviesInfo.page]);
 
 	return { ...moviesInfo, setSearchTerm, setPage };

@@ -2,6 +2,7 @@ const MOVIES_INFO_INITIAL_STATE = {
 	movies: [],
 	searchTerm: '',
 	page: 1,
+	totalPages: 1,
 	error: undefined,
 	loading: false,
 };
@@ -16,7 +17,7 @@ const MOVIES_INFO_ACTIONS = {
 
 /* NOTE:-> CREANDO USEREDUCER */
 /* FIXME: Siempre tiene que retornar el nuevo estado
-  state: Almacena el estadio anterior
+  state: Almacena el estado anterior
   action: Tenemos (type y arc)
 */
 const moviesInfoReducer = (state, action) => {
@@ -32,6 +33,7 @@ const moviesInfoReducer = (state, action) => {
 			return {
 				...state,
 				movies: action.movies,
+				totalPages: action.totalPages,
 				error: undefined,
 				loading: false,
 			};
