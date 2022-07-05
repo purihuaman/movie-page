@@ -3,14 +3,15 @@ module.exports = {
 	theme: {
 		colors: {
 			bg: {
-				DEFAULT: 'var(----color-bg)',
+				DEFAULT: 'var(--color-bg)',
 				700: 'var(--color-bg-dark)',
 			},
 			text: { DEFAULT: 'var(--color-text)' },
 			primary: { DEFAULT: 'var(--color-primary)' },
 			gray: { DEFAULT: 'var(--color-disabled)' },
 			transparent: '#15182180',
-			overlay: '#202533c7',
+			overlay: 'var(--grey-1000)',
+			// overlay: '#20253380',
 		},
 		extend: {
 			aspectRatio: {

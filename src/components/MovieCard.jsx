@@ -1,8 +1,28 @@
 import { API_POSTER_HOST } from '../constants/api';
 
-const MovieCard = ({ title, poster, year, rating }) => {
+const MovieCard = ({
+	title,
+	poster,
+	year,
+	rating,
+	landscapeImage,
+	description,
+	setPreviewMovie,
+}) => {
 	return (
-		<article className='w-1/5 p-2'>
+		<article
+			onClick={() =>
+				setPreviewMovie({
+					title,
+					poster,
+					year,
+					rating,
+					landscapeImage,
+					description,
+				})
+			}
+			className='w-1/5 p-2'
+		>
 			<div
 				style={{
 					backgroundImage: `url(${API_POSTER_HOST}${poster})`,

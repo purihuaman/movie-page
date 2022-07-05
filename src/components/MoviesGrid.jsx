@@ -1,6 +1,6 @@
 import MovieCard from './MovieCard';
 
-const MoviesGrid = ({ movies, loading, error }) => {
+const MoviesGrid = ({ movies, loading, error, setPreviewMovie }) => {
 	/* NOTE:-> Aquí va un skeleton en lugar del loading guarro esté */
 	if (loading) return <p>Cargando....</p>;
 
@@ -16,6 +16,9 @@ const MoviesGrid = ({ movies, loading, error }) => {
 						poster={movie.poster}
 						year={movie.year}
 						rating={movie.rating}
+						landscapeImage={movie.landscapeImage}
+						description={movie.description}
+						setPreviewMovie={setPreviewMovie}
 					/>
 				))}
 		</div>
