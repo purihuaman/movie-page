@@ -15,6 +15,7 @@ const HomePage = () => {
 		page,
 		error,
 		loading,
+		genres,
 		setSearchTerm,
 		setPage,
 	} = useMoviesInfo();
@@ -36,6 +37,7 @@ const HomePage = () => {
 			<MoviesGrid
 				movies={movies}
 				loading={loading}
+				genres={genres}
 				error={error}
 				setPreviewMovie={setPreviewMovie}
 			/>
